@@ -30,6 +30,6 @@ public class PatternLockMonitorReceiver extends DeviceAdminReceiver{
     public void onPasswordSucceeded(Context context, Intent intent) {
         super.onPasswordSucceeded(context, intent);
 
-        Log.d(TAG, "PasswordSucceded");
+        Log.d(TAG, "PasswordSucceeded");
     }
 }
