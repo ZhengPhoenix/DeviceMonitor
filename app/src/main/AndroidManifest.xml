@@ -2,6 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.phoenix.devicemonitor" >
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.write_external_storage" />
+
+    <uses-feature
+        android:name="android.hardware.camera2"
+        android:required="false" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,19 +24,30 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".receiver.PatternLockMonitorReceiver"
-            android:label="@string/monitor_receiver"
+        <receiver
+            android:name=".receiver.PatternLockMonitorReceiver"
             android:description="@string/admin_warning_descript"
-            android:permission="android.permission.BIND_DEVICE_ADMIN">
+            android:label="@string/monitor_receiver"
+            android:permission="android.permission.BIND_DEVICE_ADMIN" >
             <meta-data
                 android:name="android.app.device_admin"
-                android:resource="@xml/device_monitor_info"/>
+                android:resource="@xml/device_monitor_info" />
+
             <intent-filter>
-                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED"/>
-                <action android:name="android.app.action.ACTION_PASSWORD_FAILED"/>
-                <action android:name="android.app.action.ACTION_PASSWORD_SUCCEEDED"/>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+                <action android:name="android.app.action.ACTION_PASSWORD_FAILED" />
+                <action android:name="android.app.action.ACTION_PASSWORD_SUCCEEDED" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name="com.phoenix.camera.CameraTestActivity"
+            android:label="@string/title_activity_camera_test" >
+
+            <intent-filter>
+                <action android:name="com.phoenix.LAUNCH_CAMERA_TEST"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

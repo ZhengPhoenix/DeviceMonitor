@@ -5,4 +5,8 @@
     <string name="pattern_descript">Pattern Lock Security</string>
     <string name="monitor_receiver">Monitor Receiver</string>
     <string name="admin_warning_descript">Device be configure by Admin</string>
+
+    <string name="title_activity_camera_test">CameraTestActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
