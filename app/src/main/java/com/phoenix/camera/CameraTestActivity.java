@@ -3,13 +3,16 @@ package com.phoenix.camera;
 import android.app.Activity;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SurfaceView;
 import android.widget.FrameLayout;
 
 import com.phoenix.devicemonitor.R;
 
 public class CameraTestActivity extends Activity {
+    private static final String TAG = "CameraTestAct";
 
     private Camera mCamera;
     private MonitorCameraView mCameraPreview;
@@ -18,6 +21,12 @@ public class CameraTestActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera_test);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         mCamera = getCameraInstance();
         mCameraPreview = new MonitorCameraView(this, mCamera);
@@ -52,11 +61,22 @@ public class CameraTestActivity extends Activity {
         Camera c = null;
 
         try {
-            c.open();
+            c = Camera.open();
         } catch (Exception e) {
-            //camera not available
+            Log.e(TAG, "intitate Camera failed");
+            e.printStackTrace();
         }
 
         return c;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if(mCamera != null) {
+            mCamera.release();
+            mCamera = null;
+        }
     }
 }

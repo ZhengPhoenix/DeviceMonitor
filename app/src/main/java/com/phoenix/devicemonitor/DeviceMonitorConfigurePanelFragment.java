@@ -10,9 +10,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
+import com.phoenix.camera.CameraTestActivity;
 import com.phoenix.devicemonitor.receiver.PatternLockMonitorReceiver;
 
 import java.util.regex.Pattern;
@@ -57,12 +59,20 @@ public class DeviceMonitorConfigurePanelFragment extends Fragment{
         mAdminSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
+                if (isChecked) {
                     activeAdminManager();
                 } else {
                     mPolicyManager.removeActiveAdmin(mAdminReceiver);
                     Log.d(TAG, "de-active Admin");
                 }
+            }
+        });
+
+        ((Button) view.findViewById(R.id.start_camera)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, CameraTestActivity.class);
+                startActivity(intent);
             }
         });
 
