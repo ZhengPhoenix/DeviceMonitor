@@ -7,21 +7,26 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceView;
+import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 
 import com.phoenix.devicemonitor.R;
 
-public class CameraTestActivity extends Activity {
+public class CameraTestActivity extends Activity implements  Button.OnClickListener{
     private static final String TAG = "CameraTestAct";
 
     private Camera mCamera;
     private MonitorCameraView mCameraPreview;
+    Button mTakePicture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera_test);
 
+        mTakePicture = (Button) findViewById(R.id.take_picture_btn);
+        mTakePicture.setOnClickListener(this);
     }
 
     @Override
@@ -79,4 +84,18 @@ public class CameraTestActivity extends Activity {
             mCamera = null;
         }
     }
+
+    @Override
+    public void onClick(View view) {
+        if(view.getId() == R.id.take_picture_btn) {
+            mCamera.takePicture(null, null, mPictureCallback);
+        }
+    }
+
+    private Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
+        @Override
+        public void onPictureTaken(byte[] bytes, Camera camera) {
+            //TODO: implement picture callback
+        }
+    };
 }
