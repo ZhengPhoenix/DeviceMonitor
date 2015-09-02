@@ -3,7 +3,7 @@
     package="com.phoenix.devicemonitor" >
 
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.write_external_storage" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-feature
         android:name="android.hardware.camera2"
@@ -42,7 +42,8 @@
 
         <activity
             android:name="com.phoenix.camera.CameraTestActivity"
-            android:label="@string/title_activity_camera_test" >
+            android:screenOrientation="landscape"
+            android:label="@string/title_activity_camera_test">
 
             <intent-filter>
                 <action android:name="com.phoenix.LAUNCH_CAMERA_TEST"/>
