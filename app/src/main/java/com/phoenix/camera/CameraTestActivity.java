@@ -1,7 +1,10 @@
 package com.phoenix.camera;
 
 import android.app.Activity;
+import android.content.Context;
 import android.hardware.Camera;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -10,34 +13,57 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.phoenix.devicemonitor.R;
 
-public class CameraTestActivity extends Activity implements  Button.OnClickListener{
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+public class CameraTestActivity extends Activity implements Button.OnClickListener{
     private static final String TAG = "CameraTestAct";
 
-    private Camera mCamera;
+    private Context mContext = this;
+    private static Camera mCamera;
     private MonitorCameraView mCameraPreview;
-    Button mTakePicture;
+    private NinjiaCamera mNinjiaCamera;
+    private CameraSave mSave;
+
+    private Button mBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera_test);
 
-        mTakePicture = (Button) findViewById(R.id.take_picture_btn);
-        mTakePicture.setOnClickListener(this);
+        mBtn = (Button) findViewById(R.id.take_picture_btn);
+        mBtn.setOnClickListener(this);
+
+        mSave =  new CameraSave(this);
+
+        if(mCamera == null) {
+            mCamera = getCameraInstance();
+        }
+
+        if(mCameraPreview == null) {
+            mCameraPreview = new MonitorCameraView(this, mCamera);
+        }
+        // remove for SurfaceTexture test
+        //FrameLayout previewLayout = (FrameLayout) findViewById(R.id.camera_preview);
+        //previewLayout.addView(mCameraPreview);
+
+        if(mNinjiaCamera == null) {
+            mNinjiaCamera = new NinjiaCamera(this, mCamera);
+        }
+
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        mCamera = getCameraInstance();
-        mCameraPreview = new MonitorCameraView(this, mCamera);
-
-        FrameLayout previewLayout = (FrameLayout) findViewById(R.id.camera_preview);
-        previewLayout.addView(mCameraPreview);
     }
 
     @Override
@@ -65,6 +91,10 @@ public class CameraTestActivity extends Activity implements  Button.OnClickListe
     public static Camera getCameraInstance() {
         Camera c = null;
 
+        if(mCamera != null) {
+            return mCamera;
+        }
+
         try {
             c = Camera.open();
         } catch (Exception e) {
@@ -86,16 +116,52 @@ public class CameraTestActivity extends Activity implements  Button.OnClickListe
     }
 
     @Override
-    public void onClick(View view) {
-        if(view.getId() == R.id.take_picture_btn) {
-            mCamera.takePicture(null, null, mPictureCallback);
+    public void onClick(View v) {
+        if(v.getId() == R.id.take_picture_btn) {
+            /* remove for SurfaceTexture test
+            if(mCamera != null) {
+                mCamera.takePicture(null, null, mPictureCallback);
+            }
+            */
+            if(mNinjiaCamera != null) {
+                mCamera.takePicture(null, null, mPictureCallback);
+            }
         }
     }
 
-    private Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
+    Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
         @Override
-        public void onPictureTaken(byte[] bytes, Camera camera) {
-            //TODO: implement picture callback
+        public void onPictureTaken(byte[] data, Camera camera) {
+            Log.d(TAG, "pic taken");
+
+            File outputFile = mSave.getOutputMediaFile(CameraSave.DIRECTORY_PUBLIC);
+
+            if(outputFile == null) {
+                Log.e(TAG, "generate output file failed");
+                return;
+            }
+
+            try{
+                FileOutputStream fops = new FileOutputStream(outputFile);
+                fops.write(data);
+                fops.close();
+
+                MediaScannerConnection.scanFile(mContext, new String[]{outputFile.toString()}, null,
+                    new MediaScannerConnection.OnScanCompletedListener(){
+                        @Override
+                        public void onScanCompleted(String path, Uri uri) {
+                            Log.d(TAG, "Scanned completed with path : " + path);
+                        }
+                    });
+            } catch (FileNotFoundException e) {
+                Log.e(TAG, "generate picture failed : " + e.getMessage());
+            } catch (IOException e) {
+                Log.e(TAG, "write picture failed : " + e.getMessage());
+            }
+
+            mCamera.startPreview();
+
+            Toast.makeText(mContext, "Take Pic Succeeded", Toast.LENGTH_SHORT).show();
         }
     };
 }

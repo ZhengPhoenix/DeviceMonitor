@@ -50,10 +50,8 @@ public class MonitorCameraView extends SurfaceView implements SurfaceHolder.Call
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-
-        Log.d(TAG, "surfaceCreated, holder: " + holder);
         try {
-            mCamera.setPreviewDisplay(mHolder);
+            mCamera.setPreviewDisplay(holder);
             mCamera.startPreview();
         } catch (IOException e) {
             e.printStackTrace();
@@ -65,6 +63,23 @@ public class MonitorCameraView extends SurfaceView implements SurfaceHolder.Call
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         Log.d(TAG, "surfaceChanged");
+
+        if(mHolder.getSurface() == null) {
+            return;
+        }
+
+        try {
+            mCamera.stopPreview();
+        } catch (Exception e) {
+            Log.e(TAG, "stopPreview failed with Exception: " + e.getMessage());
+        }
+
+        try {
+            mCamera.setPreviewDisplay(holder);
+            mCamera.startPreview();
+        } catch (IOException e) {
+            Log.e(TAG, "surfaceChanged failed with IOException: " + e.getMessage());
+        }
     }
 
     @Override
