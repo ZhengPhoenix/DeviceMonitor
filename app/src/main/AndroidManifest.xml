@@ -42,13 +42,17 @@
 
         <activity
             android:name="com.phoenix.camera.CameraTestActivity"
-            android:screenOrientation="landscape"
-            android:label="@string/title_activity_camera_test">
-
+            android:label="@string/title_activity_camera_test"
+            android:screenOrientation="landscape" >
             <intent-filter>
-                <action android:name="com.phoenix.LAUNCH_CAMERA_TEST"/>
+                <action android:name="com.phoenix.LAUNCH_CAMERA_TEST" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".service.CaptureService"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>

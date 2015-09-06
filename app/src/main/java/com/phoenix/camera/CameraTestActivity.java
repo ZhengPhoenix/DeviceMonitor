@@ -28,6 +28,7 @@ public class CameraTestActivity extends Activity implements Button.OnClickListen
     private Context mContext = this;
     private static Camera mCamera;
     private MonitorCameraView mCameraPreview;
+    private NinjiaCamera mNinjiaCamera;
     private CameraSave mSave;
 
     private Button mBtn;
@@ -49,9 +50,15 @@ public class CameraTestActivity extends Activity implements Button.OnClickListen
         if(mCameraPreview == null) {
             mCameraPreview = new MonitorCameraView(this, mCamera);
         }
+        // remove for SurfaceTexture test
+        //FrameLayout previewLayout = (FrameLayout) findViewById(R.id.camera_preview);
+        //previewLayout.addView(mCameraPreview);
 
-        FrameLayout previewLayout = (FrameLayout) findViewById(R.id.camera_preview);
-        previewLayout.addView(mCameraPreview);
+        if(mNinjiaCamera == null) {
+            mNinjiaCamera = new NinjiaCamera(this, mCamera);
+        }
+
+
     }
 
     @Override
@@ -111,7 +118,12 @@ public class CameraTestActivity extends Activity implements Button.OnClickListen
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.take_picture_btn) {
+            /* remove for SurfaceTexture test
             if(mCamera != null) {
+                mCamera.takePicture(null, null, mPictureCallback);
+            }
+            */
+            if(mNinjiaCamera != null) {
                 mCamera.takePicture(null, null, mPictureCallback);
             }
         }
