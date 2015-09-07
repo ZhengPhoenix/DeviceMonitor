@@ -16,6 +16,8 @@ public class PatternLockMonitorReceiver extends DeviceAdminReceiver{
 
     private final String TAG = "MonitorReceiver";
 
+    private static final String BOOT_COMPLETED = "android.intent.action.BOOT_COMPLETED";
+
 
     @Override
     public void onEnabled(Context context, Intent intent) {
@@ -37,9 +39,22 @@ public class PatternLockMonitorReceiver extends DeviceAdminReceiver{
     }
 
     @Override
+    public void onReceive(Context context, Intent intent) {
+        String action = intent.getAction();
+        Log.d(TAG, "receive with action :" + action);
+        super.onReceive(context, intent);
+    }
+
+    @Override
     public void onPasswordSucceeded(Context context, Intent intent) {
         super.onPasswordSucceeded(context, intent);
 
         Log.d(TAG, "PasswordSucceeded");
+    }
+
+    @Override
+    public void onDisabled(Context context, Intent intent) {
+        super.onDisabled(context, intent);
+        Log.d(TAG, "Disabled");
     }
 }

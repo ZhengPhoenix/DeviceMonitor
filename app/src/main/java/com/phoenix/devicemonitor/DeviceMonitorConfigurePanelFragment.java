@@ -5,6 +5,7 @@ import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Camera;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -67,7 +68,16 @@ public class DeviceMonitorConfigurePanelFragment extends Fragment{
                 }
             }
         });
-
+/*
+        ((Button) view.findViewById(R.id.start_camera)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(mContext, CameraTestActivity.class);
+                startActivity(intent);
+            }
+        });
+*/
         ((Button) view.findViewById(R.id.start_camera)).setVisibility(View.GONE);
 
         return view;
