@@ -17,7 +17,7 @@ public class NinjiaCamera {
     private static final String TAG = "NinjiaCamera";
 
     private Context mContext;
-    private Camera mCamera;
+    private static Camera mCamera;
     SurfaceTexture mTexture;
 
 
@@ -53,5 +53,30 @@ public class NinjiaCamera {
         } else
             return false;
     }
+
+
+    public static Camera getCameraInstance() {
+        Camera c = null;
+
+        if(mCamera != null) {
+            return mCamera;
+        }
+
+
+        try {
+            if(Camera.getNumberOfCameras() > 1) {
+                //more than one camera
+                c = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
+            } else {
+                c = Camera.open();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "intitate Camera failed");
+            e.printStackTrace();
+        }
+
+        return c;
+    }
+
 
 }

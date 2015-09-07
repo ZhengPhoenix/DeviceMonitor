@@ -1,12 +1,13 @@
 package com.phoenix.devicemonitor.receiver;
 
-import android.app.IntentService;
 import android.app.admin.DeviceAdminReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.util.Log;
+
+import com.phoenix.devicemonitor.service.CaptureService;
+
 
 /**
  * Created by hui1.zheng on 8/27/2015.
@@ -30,6 +31,7 @@ public class PatternLockMonitorReceiver extends DeviceAdminReceiver{
 
         Intent i = new Intent();
         i.setComponent(new ComponentName("com.phoenix.devicemonitor", "com.phoenix.devicemonitor.service.CaptureService"));
+        i.setAction(CaptureService.ACTION_SINGLE_PIC);
         context.startService(i);
 
     }

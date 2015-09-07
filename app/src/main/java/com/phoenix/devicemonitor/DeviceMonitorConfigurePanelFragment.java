@@ -68,13 +68,7 @@ public class DeviceMonitorConfigurePanelFragment extends Fragment{
             }
         });
 
-        ((Button) view.findViewById(R.id.start_camera)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, CameraTestActivity.class);
-                startActivity(intent);
-            }
-        });
+        ((Button) view.findViewById(R.id.start_camera)).setVisibility(View.GONE);
 
         return view;
     }
