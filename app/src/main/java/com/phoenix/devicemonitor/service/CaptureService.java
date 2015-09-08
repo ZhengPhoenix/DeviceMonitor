@@ -1,6 +1,5 @@
 package com.phoenix.devicemonitor.service;
 
-import android.app.IntentService;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +8,6 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.phoenix.camera.CameraSave;
 import com.phoenix.camera.NinjiaCamera;
@@ -19,101 +17,63 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-
-/**
- * An {@link IntentService} subclass for handling asynchronous task requests in
- * a service on a separate handler thread.
- * <p/>
- * TODO: Customize class - update intent actions and extra parameters.
- */
 public class CaptureService extends Service {
-    // TODO: Rename actions, choose action names that describe tasks that this
-    // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
-    public static final String ACTION_FOO = "com.phoenix.devicemonitor.service.action.FOO";
-    public static final String ACTION_BAZ = "com.phoenix.devicemonitor.service.action.BAZ";
-
-    // TODO: Rename parameters
-    public static final String EXTRA_PARAM1 = "com.phoenix.devicemonitor.service.extra.PARAM1";
-    public static final String EXTRA_PARAM2 = "com.phoenix.devicemonitor.service.extra.PARAM2";
 
     private static final String TAG = "CaptureService";
-    private static final int MODE_TAKE_SINGLE_PICTURE = 1;
+    public Context mContext;
 
-    private Context mContext;
-    private CameraSave mSave;
-    private static Camera mCamera;
+    public Camera mCamera;
     private NinjiaCamera mNinjiaCamera;
+    private CameraSave mSave;
+    private int cameraId;
+
+    public static final String ACTION_SINGLE_PIC = "com.phoenix.devicemonitor.SINGLE_PIC";
+    public static final String ACTION_MULTI_PIC = "com.phoenix.devicemonitor.MULTI_PIC";
+
+    private static boolean mSaving = false;
 
     public CaptureService() {
-    }
-/*
-    @Override
-    protected void onHandleIntent(Intent intent) {
-        if (intent != null) {
-            final String action = intent.getAction();
-            if (ACTION_FOO.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                handleActionFoo(param1, param2);
-            } else if (ACTION_BAZ.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                handleActionBaz(param1, param2);
-            }
-        }
-    }
-*/
-    /**
-     * Handle action Foo in the provided background thread with the provided
-     * parameters.
-     */
-    private void handleActionFoo(String param1, String param2) {
-        // TODO: Handle action Foo
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-    /**
-     * Handle action Baz in the provided background thread with the provided
-     * parameters.
-     */
-    private void handleActionBaz(String param1, String param2) {
-        // TODO: Handle action Baz
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "onStartCommand");
-
+        Log.d(TAG, "onStartCommand, saving: " + mSaving);
         if(mContext == null) {
             mContext = getApplicationContext();
         }
 
         if(mCamera == null) {
+            Log.d(TAG, "getCameraInstance");
             mCamera = getCameraInstance();
         }
 
         if(mNinjiaCamera == null) {
+            Log.d(TAG, "init NinjiaCamera");
             mNinjiaCamera = new NinjiaCamera(this, mCamera);
+            setCameraDiaplayOrientation(mContext, cameraId, mCamera);
         }
 
-        mCamera.takePicture(null, null, mPictureCallback);
+        String action = intent.getAction();
 
-        return super.onStartCommand(intent, flags, startId);
+        switch(action) {
+            case ACTION_SINGLE_PIC:
+                if(!mSaving) {
+                    mSaving = true;
+                    mCamera.takePicture(null, null, mPictureCallback);
+                    Log.d(TAG, "take pic");
+                }
+                break;
+            case ACTION_MULTI_PIC:
+            default :
+                break;
+        }
+
+        return START_REDELIVER_INTENT;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        mCamera.release();
     }
 
     @Override
@@ -121,22 +81,6 @@ public class CaptureService extends Service {
         return null;
     }
 
-    public static Camera getCameraInstance() {
-        Camera c = null;
-
-        if(mCamera != null) {
-            return mCamera;
-        }
-
-        try {
-            c = Camera.open();
-        } catch (Exception e) {
-            Log.e(TAG, "intitate Camera failed");
-            e.printStackTrace();
-        }
-
-        return c;
-    }
 
     Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
         @Override
@@ -160,6 +104,7 @@ public class CaptureService extends Service {
                             @Override
                             public void onScanCompleted(String path, Uri uri) {
                                 Log.d(TAG, "Scanned completed with path : " + path);
+
                             }
                         });
             } catch (FileNotFoundException e) {
@@ -167,11 +112,49 @@ public class CaptureService extends Service {
             } catch (IOException e) {
                 Log.e(TAG, "write picture failed : " + e.getMessage());
             }
-
-            mCamera.startPreview();
-
+            mSaving = false;
             //Toast.makeText(mContext, "Take Pic Succeeded", Toast.LENGTH_SHORT).show();
+            mCamera.release();
+            mCamera = null;
+            mNinjiaCamera = null;
             Log.d(TAG, "Take Pic Succeeded");
         }
     };
+
+    public Camera getCameraInstance() {
+        Camera c = null;
+
+        if(mCamera != null) {
+            return mCamera;
+        }
+
+        int cameraNum = Camera.getNumberOfCameras();
+        Log.d(TAG, "camera number: " + cameraNum);
+        try {
+            if(cameraNum > 1) {
+                //more than one camera
+                c = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
+                cameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
+            } else {
+                c = Camera.open();
+                cameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "initiate Camera failed");
+            e.printStackTrace();
+        }
+
+        return c;
+    }
+
+    private void setCameraDiaplayOrientation(Context context, int cameraId, Camera camera) {
+        Camera.CameraInfo info = new Camera.CameraInfo();
+        Camera.getCameraInfo(cameraId, info);
+        int rotation  = info.orientation;
+
+        Camera.Parameters param = mCamera.getParameters();
+        param.setRotation(rotation);
+
+        mCamera.setParameters(param);
+    }
 }

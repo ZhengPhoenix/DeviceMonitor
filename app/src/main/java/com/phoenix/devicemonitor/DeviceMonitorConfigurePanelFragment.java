@@ -12,23 +12,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 
-import com.phoenix.camera.CameraTestActivity;
 import com.phoenix.devicemonitor.receiver.PatternLockMonitorReceiver;
-
-import java.util.regex.Pattern;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class DeviceMonitorConfigurePanelFragment extends Fragment{
+public class DeviceMonitorConfigurePanelFragment extends Fragment implements View.OnClickListener{
 
     private final String TAG = "ConfigurePanel";
 
     private Context mContext;
 
+    public View.OnClickListener mListener;
     private Switch mAdminSwitch;
+    private LinearLayout mConfigureLayout;
 
     private ComponentName mAdminReceiver;
     DevicePolicyManager mPolicyManager;
@@ -67,14 +67,19 @@ public class DeviceMonitorConfigurePanelFragment extends Fragment{
                 }
             }
         });
-
+/*
         ((Button) view.findViewById(R.id.start_camera)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, CameraTestActivity.class);
+                Intent intent = new Intent();
+                intent.setClass(mContext, CameraTestActivity.class);
                 startActivity(intent);
             }
         });
+*/
+        ((Button) view.findViewById(R.id.start_camera)).setVisibility(View.GONE);
+        mConfigureLayout = (LinearLayout) view.findViewById(R.id.configure_panel);
+        mConfigureLayout.setOnClickListener(this);
 
         return view;
     }
@@ -101,6 +106,28 @@ public class DeviceMonitorConfigurePanelFragment extends Fragment{
         }
 
         return false;
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+
+        switch (id) {
+            case R.id.configure_panel:
+            case R.id.text_configure:
+                Log.d(TAG, "start PreferenceActivity");
+                launchPreferenceActivity();
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    private void launchPreferenceActivity() {
+        Intent intent = new Intent();
+        intent.setClass(mContext, MonitorPreferenceActivity.class);
+        startActivity(intent);
     }
 }
 

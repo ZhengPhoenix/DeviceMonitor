@@ -50,13 +50,16 @@ public class CameraTestActivity extends Activity implements Button.OnClickListen
         if(mCameraPreview == null) {
             mCameraPreview = new MonitorCameraView(this, mCamera);
         }
-        // remove for SurfaceTexture test
-        //FrameLayout previewLayout = (FrameLayout) findViewById(R.id.camera_preview);
-        //previewLayout.addView(mCameraPreview);
 
+        setCameraDiaplayOrientation(mContext, 0, mCamera);
+
+        FrameLayout previewLayout = (FrameLayout) findViewById(R.id.camera_preview);
+        previewLayout.addView(mCameraPreview);
+        /*
         if(mNinjiaCamera == null) {
             mNinjiaCamera = new NinjiaCamera(this, mCamera);
         }
+        */
 
 
     }
@@ -96,7 +99,7 @@ public class CameraTestActivity extends Activity implements Button.OnClickListen
         }
 
         try {
-            c = Camera.open();
+            c = Camera.open(1);
         } catch (Exception e) {
             Log.e(TAG, "intitate Camera failed");
             e.printStackTrace();
@@ -118,14 +121,15 @@ public class CameraTestActivity extends Activity implements Button.OnClickListen
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.take_picture_btn) {
-            /* remove for SurfaceTexture test
+
             if(mCamera != null) {
                 mCamera.takePicture(null, null, mPictureCallback);
             }
-            */
+            /*
             if(mNinjiaCamera != null) {
                 mCamera.takePicture(null, null, mPictureCallback);
             }
+            */
         }
     }
 
@@ -164,4 +168,18 @@ public class CameraTestActivity extends Activity implements Button.OnClickListen
             Toast.makeText(mContext, "Take Pic Succeeded", Toast.LENGTH_SHORT).show();
         }
     };
+
+    private void setCameraDiaplayOrientation(Context context, int cameraId, Camera camera) {
+        Camera.CameraInfo info = new Camera.CameraInfo();
+        Camera.getCameraInfo(cameraId, info);
+
+        int orientation;
+        if(cameraId == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            orientation = 0;
+        } else {
+            orientation = 0;
+        }
+
+        camera.setDisplayOrientation(orientation);
+    }
 }

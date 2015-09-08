@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="Send Account">
+
+        <EditTextPreference
+            android:title="Send Email Account"
+            android:key="sendaccount"
+            android:inputType="textEmailAddress"
+            android:summary="sending account"
+            android:singleLine="true">
+        </EditTextPreference>
+
+        <EditTextPreference
+            android:title="Password"
+            android:key="password"
+            android:inputType=""
+            android:singleLine="true">
+        </EditTextPreference>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Receive Account">
+        <EditTextPreference
+            android:title="Send To"
+            android:key="sendto"
+            android:inputType="textEmailAddress"
+            android:summary="receiving account"
+            android:singleLine="true">
+        </EditTextPreference>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="More Option">
+        <CheckBoxPreference
+            android:title="Disable take picture in 10s with correct psw"
+            android:key="disablepic"
+            android:defaultValue="false">
+        </CheckBoxPreference>
+    </PreferenceCategory>
+
+    <Preference
+        android:title="Connection Test"
+        android:key="connection_test"/>
+</PreferenceScreen>

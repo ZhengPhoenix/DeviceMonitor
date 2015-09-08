@@ -9,7 +9,8 @@
     <RelativeLayout
         android:id="@+id/pattern_layout"
         android:layout_width="fill_parent"
-        android:layout_height="@dimen/item_height">
+        android:layout_height="@dimen/item_height"
+        android:clickable="true">
 
         <TextView
             android:id="@+id/pattern_text"
@@ -28,9 +29,43 @@
     <LinearLayout
         android:id="@+id/divide_line"
         android:orientation="vertical"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/pattern_layout">
+
+        <ImageView
+            android:background="@android:color/darker_gray"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/line_divider_height"
+            android:layout_marginLeft="@dimen/divider_line_margin"
+            android:layout_marginRight="@dimen/divider_line_margin"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/configure_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="horizontal"
+        android:layout_below="@id/divide_line">
+
+        <TextView
+            android:id="@+id/text_configure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="@string/action_settings"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/divide_line_configure"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/configure_panel">
 
         <ImageView
             android:background="@android:color/darker_gray"
@@ -45,7 +80,7 @@
         android:layout_height="fill_parent"
         android:orientation="vertical"
         android:gravity="center"
-        android:layout_below="@id/divide_line">
+        android:layout_below="@id/divide_line_configure">
 
         <Button
             android:id="@+id/start_camera"

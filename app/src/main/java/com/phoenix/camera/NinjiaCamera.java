@@ -6,6 +6,7 @@ import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.util.Log;
 import android.view.SurfaceHolder;
+import android.view.WindowManager;
 
 import java.io.IOException;
 
@@ -34,7 +35,6 @@ public class NinjiaCamera {
         mCamera = camera;
 
         mTexture = new SurfaceTexture(0);
-        Log.d(TAG, "PreView constructor, texture:" + mTexture);
 
         try {
             mCamera.setPreviewTexture(mTexture);
@@ -53,5 +53,8 @@ public class NinjiaCamera {
         } else
             return false;
     }
+
+
+
 
 }
