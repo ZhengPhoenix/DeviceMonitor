@@ -1,47 +1,42 @@
 package com.phoenix.devicemonitor;
 
+import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.os.Bundle;
-import android.preference.*;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
 
-public class DeviceMonitorConfigurePanel extends Activity {
+public class MonitorPreferenceActivity extends Activity {
 
-    private Context mContext;
-    protected FragmentManager mFragmentManager;
-    protected DeviceMonitorConfigurePanelFragment mMainFragment;
+    FragmentManager mFragmentManager;
+    PreferenceFragment mPreferenceManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_device_monitor_configure_panel);
-
-        mContext = getApplicationContext();
+        setContentView(R.layout.activity_monitor_preference);
 
         mFragmentManager = getFragmentManager();
-        mMainFragment = (DeviceMonitorConfigurePanelFragment) mFragmentManager.findFragmentById(R.id.main_fragment);
-    }
+        mPreferenceManager = new PreferenceFragment();
 
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.replace(android.R.id.content, mPreferenceManager);
+        transaction.commit();
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+        ActionBar actionbar = getActionBar();
+        if(actionbar != null) {
+            actionbar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_TITLE);
+        }
 
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_device_monitor_configure_panel, menu);
-        return true;
+        //getMenuInflater().inflate(R.menu.menu_monitor_preference, menu);
+        return false;
     }
 
     @Override
@@ -51,12 +46,14 @@ public class DeviceMonitorConfigurePanel extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch(id) {
+            case android.R.id.home:
+                finish();
+                break;
+            default:
+                break;
         }
 
         return super.onOptionsItemSelected(item);
     }
-
 }
