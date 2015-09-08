@@ -22,12 +22,16 @@ public class DeviceMonitorConfigurePanel extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_device_monitor_configure_panel);
+        setContentView(R.layout.main_configure_activity);
 
         mContext = getApplicationContext();
 
         mFragmentManager = getFragmentManager();
-        mMainFragment = (DeviceMonitorConfigurePanelFragment) mFragmentManager.findFragmentById(R.id.main_fragment);
+//        mMainFragment = (DeviceMonitorConfigurePanelFragment) mFragmentManager.findFragmentById(R.id.main_fragment);
+
+        PreferenceFragment mPreFragment = new PreferenceFragment();
+        FragmentTransaction transaction =  mFragmentManager.beginTransaction();
+        transaction.replace(android.R.id.content, mPreFragment).commit();
     }
 
 

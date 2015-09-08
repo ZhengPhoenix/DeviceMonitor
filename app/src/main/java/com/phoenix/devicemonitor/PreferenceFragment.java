@@ -1,7 +1,10 @@
 package com.phoenix.devicemonitor;
 
 import android.app.Activity;
+import android.app.admin.DevicePolicyManager;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -12,23 +15,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.phoenix.devicemonitor.receiver.PatternLockMonitorReceiver;
+
 
 public class PreferenceFragment extends android.preference.PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = "PreferenceFragment";
 
     public Context mContext;
-    private static final String SEND_ACCOUNT = "sendaccount";
+    private static final String SEND_ACCOUNT = "test@test.com";
     private static final String PASSWORD = "password";
     private static final String RECEIVER_ACCOUNT = "sendto";
+    private static final String ENABLE_ADMIN = "monitor_enable";
 
     private String mSendAccount;
     private String mPsw;
     private String mReceiverAccount;
 
+    private ComponentName mAdminReceiver;
+    DevicePolicyManager mPolicyManager;
+
     SharedPreferences preferences;
-    Preference mSendPre;
-    Preference mPassword;
+    //remove for user do not want to expose their psw
+//    Preference mSendPre;
+//    Preference mPassword;
     Preference mReceiverPre;
 
     Button mTestBtn;
@@ -46,6 +56,8 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
         addPreferencesFromResource(R.xml.preferences);
         preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
 
+        mAdminReceiver = new ComponentName(mContext, PatternLockMonitorReceiver.class);
+        mPolicyManager = (DevicePolicyManager) mContext.getSystemService(Context.DEVICE_POLICY_SERVICE);
     }
 
     @Override
@@ -62,15 +74,11 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
             }
         });
 
-        mSendAccount = preferences.getString(SEND_ACCOUNT, "");
-        mPsw = preferences.getString(PASSWORD, "");
+        mSendAccount = SEND_ACCOUNT;
+        mPsw = PASSWORD;
         mReceiverAccount = preferences.getString(RECEIVER_ACCOUNT, "");
 
-        mSendPre = (Preference) findPreference(SEND_ACCOUNT);
         mReceiverPre = (Preference) findPreference(RECEIVER_ACCOUNT);
-        if (!"".equals(mSendAccount) && !"sending account".equals(mSendAccount)) {
-            mSendPre.setSummary(mSendAccount);
-        }
         if (!"".equals(mReceiverAccount) && !"receiving account".equals(mReceiverAccount)) {
             mReceiverPre.setSummary(mReceiverAccount);
         }
@@ -95,20 +103,29 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.d(TAG, "onSharedPreferenceChanged, key:" + key);
         switch (key) {
-            case SEND_ACCOUNT:
-                mSendAccount = sharedPreferences.getString(SEND_ACCOUNT, "");
-                mSendPre.setSummary(mSendAccount);
-                break;
-            case PASSWORD:
-
-                break;
             case RECEIVER_ACCOUNT:
                 mReceiverAccount = sharedPreferences.getString(RECEIVER_ACCOUNT, "");
                 mReceiverPre.setSummary(mReceiverAccount);
                 break;
 
+            case ENABLE_ADMIN:
+                if(sharedPreferences.getBoolean(ENABLE_ADMIN, false)) {
+                    activeAdminManager();
+                } else {
+                    Log.d(TAG, "disable device monitor");
+                    mPolicyManager.removeActiveAdmin(mAdminReceiver);
+                }
             default:
                 break;
         }
+    }
+
+    private void activeAdminManager(){
+        Log.d(TAG, "active Admin Manager");
+        Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+        intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mAdminReceiver);
+        intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, getActivity().getString(R.string.admin_warning_descript));
+
+        getActivity().startActivityForResult(intent, 1);
     }
 }

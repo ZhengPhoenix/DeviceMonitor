@@ -2,22 +2,12 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:title="Send Account">
-
-        <EditTextPreference
-            android:title="Send Email Account"
-            android:key="sendaccount"
-            android:inputType="textEmailAddress"
-            android:summary="sending account"
-            android:singleLine="true">
-        </EditTextPreference>
-
-        <EditTextPreference
-            android:title="Password"
-            android:key="password"
-            android:inputType=""
-            android:singleLine="true">
-        </EditTextPreference>
+        android:title="Enable Monitor Lock">
+        <SwitchPreference
+            android:title="Monitor Screen Lock"
+            android:summary="take picture if wrong pattern"
+            android:key="monitor_enable"
+            android:singleLine="true"/>
     </PreferenceCategory>
 
     <PreferenceCategory
