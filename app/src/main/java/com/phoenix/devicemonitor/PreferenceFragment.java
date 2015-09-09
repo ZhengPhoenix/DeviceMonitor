@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.phoenix.devicemonitor.receiver.PatternLockMonitorReceiver;
+import com.phoenix.devicemonitor.service.MailSender;
 
 
 public class PreferenceFragment extends android.preference.PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -45,7 +46,7 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
     Preference mReceiverPre;
     Preference mMonitorEnabled;
 
-    Button mTestBtn;
+    MailSender sender;
 
     public void PreferenceFragment() {
 
@@ -62,6 +63,8 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
 
         mAdminReceiver = new ComponentName(mContext, PatternLockMonitorReceiver.class);
         mPolicyManager = (DevicePolicyManager) mContext.getSystemService(Context.DEVICE_POLICY_SERVICE);
+
+        sender = new MailSender("342972949@qq.com", "phoenix_zh@foxmail.com", "Subject", "Text Body", "<b>Html Body<b>");
     }
 
     @Override
@@ -74,6 +77,7 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 Log.d(TAG, "connection test");
+                sender.execute();
                 return false;
             }
         });

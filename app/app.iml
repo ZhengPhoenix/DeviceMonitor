@@ -91,5 +91,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="support-v4-23.0.0" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-23.0.0" level="project" />
+    <orderEntry type="module" module-name="additionnal" exported="" />
+    <orderEntry type="module" module-name="mail" exported="" />
+    <orderEntry type="module" module-name="activation" exported="" />
   </component>
 </module>
