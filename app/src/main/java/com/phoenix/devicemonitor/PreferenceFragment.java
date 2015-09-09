@@ -9,11 +9,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
+import android.preference.SwitchPreference;
+import android.preference.TwoStatePreference;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.phoenix.devicemonitor.receiver.PatternLockMonitorReceiver;
 
@@ -40,6 +43,7 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
 //    Preference mSendPre;
 //    Preference mPassword;
     Preference mReceiverPre;
+    Preference mMonitorEnabled;
 
     Button mTestBtn;
 
@@ -82,6 +86,8 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
         if (!"".equals(mReceiverAccount) && !"receiving account".equals(mReceiverAccount)) {
             mReceiverPre.setSummary(mReceiverAccount);
         }
+
+        mMonitorEnabled = (Preference) findPreference(ENABLE_ADMIN);
 
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
         return view;
@@ -126,6 +132,18 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
         intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mAdminReceiver);
         intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, getActivity().getString(R.string.admin_warning_descript));
 
-        getActivity().startActivityForResult(intent, 1);
+        startActivityForResult(intent, 1);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        Log.d(TAG, "on result, result: " + resultCode);
+        if(resultCode == Activity.RESULT_OK) {
+            ((TwoStatePreference) mMonitorEnabled).setChecked(true);
+        } else if(resultCode == Activity.RESULT_CANCELED) {
+            ((TwoStatePreference) mMonitorEnabled).setChecked(false);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

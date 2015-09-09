@@ -48,6 +48,7 @@
         android:clickable="true"
         android:focusable="true"
         android:orientation="horizontal"
+        android:background="?android:attr/selectableItemBackground"
         android:layout_below="@id/divide_line">
 
         <TextView
