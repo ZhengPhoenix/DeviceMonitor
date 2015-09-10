@@ -1,15 +1,27 @@
 package com.phoenix.devicemonitor.service;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import javax.activation.CommandMap;
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import javax.activation.MailcapCommandMap;
+import javax.activation.MimeType;
+import javax.activation.MimetypesFileTypeMap;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
-import java.util.ArrayList;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -19,9 +31,11 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.InternetHeaders;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
 
 
 /**
@@ -35,12 +49,15 @@ public class MailSender extends AsyncTask{
     private static final String USER_NAME = "342972949@qq.com";
     private static final String USER_PSW = "heaventear";
 
+    private static final String TEMP_PIC_DIR = "/storage/emulated/0/Pictures/CameraSave/IMG_150910_100611.jpg";
+
     private String mFrom;
     private String mToList;
     private String mCcList;
     private String mSubject;
     private String mTxtBody;
     private String mHtmlBody;
+    private String mAttachment;
 
     private boolean authenticationRequired = false;
 
@@ -51,6 +68,18 @@ public class MailSender extends AsyncTask{
         this.mSubject = subject;
         this.mTxtBody = txtBody;
         this.mHtmlBody = htmlBody;
+
+        this.authenticationRequired = true;
+    }
+
+    public MailSender(String from, String to, String subject, String txtBody, String htmlBody, String path) {
+        this.mFrom = from;
+        this.mToList = to;
+        this.mCcList = null;
+        this.mSubject = subject;
+        this.mTxtBody = txtBody;
+        this.mHtmlBody = htmlBody;
+        this.mAttachment = path;
 
         this.authenticationRequired = true;
     }
@@ -142,13 +171,27 @@ public class MailSender extends AsyncTask{
 
         //set body message
         MimeBodyPart bodyMsg = new MimeBodyPart();
-        bodyMsg.setText(mTxtBody, "iso-8859-1");
 
-        bodyMsg.setContent(mHtmlBody, "text/html");
+        bodyMsg.setText(""
+                        + "<html>"
+                        + " <body>"
+                        + "  <p>Here is my image:</p>"
+                        + "  <img src=\"cid:image\" />"
+                        + " </body>"
+                        + "</html>",
+                "US-ASCII", "html");
         mp.addBodyPart(bodyMsg);
 
-        msg.setContent(mp);
+        bodyMsg = new MimeBodyPart();
+        ByteArrayDataSource bds = new ByteArrayDataSource(createByteArrayForImage(this.mAttachment), "image/jpeg");
+        bodyMsg.setDataHandler(new DataHandler(bds));
+        bodyMsg.setHeader("Content-ID", "<image>");
 
+        mp.addBodyPart(bodyMsg);
+
+
+
+        msg.setContent(mp);
 
         try {
             Transport.send(msg);
@@ -166,6 +209,19 @@ public class MailSender extends AsyncTask{
 
             return new PasswordAuthentication(username, password);
         }
+    }
+
+    private byte[] createByteArrayForImage(String path) {
+
+//            InputStream inStream = new FileInputStream(path);
+        Bitmap bitmap = BitmapFactory.decodeFile(path);
+
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+        int scaleW = (int) (bitmap.getWidth()*0.2);
+        int scaleH = (int) (bitmap.getHeight()*0.2);
+        ((Bitmap) Bitmap.createScaledBitmap(bitmap, scaleW, scaleH, false)).compress(Bitmap.CompressFormat.JPEG, 40, outStream);
+
+        return outStream.toByteArray();
     }
 
     public String getmFrom() {

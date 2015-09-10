@@ -3,14 +3,17 @@ package com.phoenix.devicemonitor.service;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.hardware.Camera;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.phoenix.camera.CameraSave;
 import com.phoenix.camera.NinjiaCamera;
+import com.phoenix.devicemonitor.PreferenceFragment;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -117,6 +120,12 @@ public class CaptureService extends Service {
             mCamera.release();
             mCamera = null;
             mNinjiaCamera = null;
+
+            SharedPreferences pre = PreferenceManager.getDefaultSharedPreferences(mContext);
+            String receiver = pre.getString(PreferenceFragment.RECEIVER_ACCOUNT, "");
+            MailSender sender = new MailSender("342972949@qq.com", receiver, "Subject", "Text Body", "<b>Html Body<b>", outputFile.toString());
+            sender.execute();
+
             Log.d(TAG, "Take Pic Succeeded");
         }
     };

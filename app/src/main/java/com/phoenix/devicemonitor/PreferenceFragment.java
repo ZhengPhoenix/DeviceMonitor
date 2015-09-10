@@ -27,10 +27,10 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
     private static final String TAG = "PreferenceFragment";
 
     public Context mContext;
-    private static final String SEND_ACCOUNT = "test@test.com";
-    private static final String PASSWORD = "password";
-    private static final String RECEIVER_ACCOUNT = "sendto";
-    private static final String ENABLE_ADMIN = "monitor_enable";
+    public static final String SEND_ACCOUNT = "test@test.com";
+    public static final String PASSWORD = "password";
+    public static final String RECEIVER_ACCOUNT = "sendto";
+    public static final String ENABLE_ADMIN = "monitor_enable";
 
     private String mSendAccount;
     private String mPsw;
@@ -40,9 +40,7 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
     DevicePolicyManager mPolicyManager;
 
     SharedPreferences preferences;
-    //remove for user do not want to expose their psw
-//    Preference mSendPre;
-//    Preference mPassword;
+
     Preference mReceiverPre;
     Preference mMonitorEnabled;
 
