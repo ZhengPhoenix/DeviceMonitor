@@ -58,6 +58,16 @@ public class CaptureService extends Service {
 
         String action = intent.getAction();
 
+        if(ACTION_SINGLE_PIC.equals(action)) {
+            if(!mSaving) {
+                mSaving = true;
+                mCamera.takePicture(null, null, mPictureCallback);
+                Log.d(TAG, "take pic");
+            }
+        } else if(ACTION_MULTI_PIC.equals(action)) {
+
+        }
+        /*
         switch(action) {
             case ACTION_SINGLE_PIC:
                 if(!mSaving) {
@@ -70,7 +80,7 @@ public class CaptureService extends Service {
             default :
                 break;
         }
-
+        */
         return START_REDELIVER_INTENT;
     }
 

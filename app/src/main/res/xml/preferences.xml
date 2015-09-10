@@ -2,31 +2,32 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:title="Enable Monitor Lock">
+        android:title="@string/enable_monitor_lock">
         <SwitchPreference
-            android:title="Monitor Screen Lock"
-            android:summary="take picture if wrong pattern"
+            android:title="@string/monitor_screen_lock"
+            android:summary="@string/monitor_screen_lock_summy"
             android:key="monitor_enable"
             android:defaultValue="false"
             android:singleLine="true"/>
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="Receive Account">
+        android:title="@string/receiver_account">
         <EditTextPreference
-            android:title="Send To"
+            android:title="@string/send_to"
             android:key="sendto"
             android:inputType="textEmailAddress"
-            android:summary="receiving account"
+            android:summary="@string/receiver_account"
             android:singleLine="true">
         </EditTextPreference>
 
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="More Option">
+        android:title="@string/more_option">
         <CheckBoxPreference
-            android:title="Disable take picture in 10s with correct psw"
+            android:title="@string/ten_sec_limit"
+            android:summary="@string/ten_sec_limit_summary"
             android:key="disablepic"
             android:defaultValue="false">
         </CheckBoxPreference>

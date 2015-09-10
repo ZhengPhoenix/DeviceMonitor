@@ -2,9 +2,9 @@
     <string name="app_name">DeviceMonitor</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="pattern_descript">Pattern Lock Security</string>
+    <string name="pattern_descript">Pattern Lock Security Setting</string>
     <string name="monitor_receiver">Monitor Receiver</string>
-    <string name="admin_warning_descript">Device be configure by Admin</string>
+    <string name="admin_warning_descript">Your Device will be protected by Device Monitor</string>
 
     <string name="title_activity_camera_test">CameraTestActivity</string>
     <string name="dummy_button">Dummy Button</string>
@@ -13,4 +13,17 @@
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_monitor_preference">Configure Panel</string>
+
+    <!-- Preference String -->
+    <string name="enable_monitor_lock">ScreenLock Protection</string>
+    <string name="monitor_screen_lock">Enable ScreenLock Protection</string>
+    <string name="monitor_screen_lock_summy">take picture if wrong pattern or password entered</string>
+
+    <string name="receiver_account">Receiver Account Setting</string>
+    <string name="send_to">Send To</string>
+    <string name="receiver_account_summary">enter your E-mail for receiving taken picture</string>
+    <string name="more_option">More Option</string>
+    <string name="ten_sec_limit">Malfunction Protection</string>
+    <string name="ten_sec_limit_summary">DO NOT take picture with correct password input in 10s</string>
+
 </resources>

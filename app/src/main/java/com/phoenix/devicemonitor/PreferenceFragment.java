@@ -110,6 +110,18 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.d(TAG, "onSharedPreferenceChanged, key:" + key);
+        if(RECEIVER_ACCOUNT.equals(key)) {
+            mReceiverAccount = sharedPreferences.getString(RECEIVER_ACCOUNT, "");
+            mReceiverPre.setSummary(mReceiverAccount);
+        } else if(ENABLE_ADMIN.equals(key)) {
+            if(sharedPreferences.getBoolean(ENABLE_ADMIN, false)) {
+                activeAdminManager();
+            } else {
+                Log.d(TAG, "disable device monitor");
+                mPolicyManager.removeActiveAdmin(mAdminReceiver);
+            }
+        }
+        /*
         switch (key) {
             case RECEIVER_ACCOUNT:
                 mReceiverAccount = sharedPreferences.getString(RECEIVER_ACCOUNT, "");
@@ -126,6 +138,7 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
             default:
                 break;
         }
+        */
     }
 
     private void activeAdminManager(){

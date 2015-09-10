@@ -1,5 +1,6 @@
 package com.phoenix.devicemonitor;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -16,8 +17,8 @@ import android.widget.Toast;
 public class DeviceMonitorConfigurePanel extends Activity {
 
     private Context mContext;
+    ActionBar mActionBar;
     protected FragmentManager mFragmentManager;
-    protected DeviceMonitorConfigurePanelFragment mMainFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +28,11 @@ public class DeviceMonitorConfigurePanel extends Activity {
         mContext = getApplicationContext();
 
         mFragmentManager = getFragmentManager();
-//        mMainFragment = (DeviceMonitorConfigurePanelFragment) mFragmentManager.findFragmentById(R.id.main_fragment);
 
         PreferenceFragment mPreFragment = new PreferenceFragment();
         FragmentTransaction transaction =  mFragmentManager.beginTransaction();
         transaction.replace(android.R.id.content, mPreFragment).commit();
+
     }
 
 
@@ -44,8 +45,8 @@ public class DeviceMonitorConfigurePanel extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_device_monitor_configure_panel, menu);
-        return true;
+//        getMenuInflater().inflate(R.menu.menu_device_monitor_configure_panel, menu);
+        return false;
     }
 
     @Override

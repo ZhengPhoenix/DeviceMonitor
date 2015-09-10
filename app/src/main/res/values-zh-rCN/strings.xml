@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DeviceMonitor</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">设置</string>
+    <string name="pattern_descript">锁屏密码安全设置</string>
+    <string name="admin_warning_descript">您的设备将会由设备管理器来保护</string>
+
+    <string name="title_activity_camera_test">CameraTestActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="title_activity_monitor_preference">Configure Panel</string>
+
+    <!-- Preference String -->
+    <string name="enable_monitor_lock">锁屏解锁保护</string>
+    <string name="monitor_screen_lock">启动锁屏解锁保护</string>
+    <string name="monitor_screen_lock_summy">如果有错误的解锁图案或密码输入，将启动摄像头拍照</string>
+
+    <string name="receiver_account">接收邮箱设置</string>
+    <string name="send_to">接收邮箱</string>
+    <string name="receiver_account_summary">请输入您希望接收邮件的邮箱</string>
+    <string name="more_option">更多</string>
+    <string name="ten_sec_limit">误操作保护</string>
+    <string name="ten_sec_limit_summary">如果在10秒内输入正确的解锁图案或密码，则取消拍照</string>
+</resources>
