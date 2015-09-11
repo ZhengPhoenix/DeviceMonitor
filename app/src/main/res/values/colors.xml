@@ -1,6 +1,7 @@
 <resources>
 
-    <color name="black_overlay">#000000</color>
+    <color name="black_overlay">#66000000</color>
     <color name="blue_main">@android:color/holo_blue_light</color>
-
+    <color name="actionbar_text">@android:color/white</color>
+    <color name="status_color">@android:color/black</color>
 </resources>

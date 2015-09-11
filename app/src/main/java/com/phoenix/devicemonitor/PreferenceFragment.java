@@ -31,15 +31,18 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
     public static final String PASSWORD = "password";
     public static final String RECEIVER_ACCOUNT = "sendto";
     public static final String ENABLE_ADMIN = "monitor_enable";
+    public static final String KEEP_PICTURE = "keep_picture";
+    public static final String TEN_SEC_DELAY = "ten_sec_delay";
 
     private String mSendAccount;
     private String mPsw;
     private String mReceiverAccount;
+    private boolean mKeepPicture;
 
     private ComponentName mAdminReceiver;
     DevicePolicyManager mPolicyManager;
 
-    SharedPreferences preferences;
+    SharedPreferences mPreferences;
 
     Preference mReceiverPre;
     Preference mMonitorEnabled;
@@ -57,18 +60,12 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
         mContext = getActivity();
         //load preference configure
         addPreferencesFromResource(R.xml.preferences);
-        preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
 
         mAdminReceiver = new ComponentName(mContext, PatternLockMonitorReceiver.class);
         mPolicyManager = (DevicePolicyManager) mContext.getSystemService(Context.DEVICE_POLICY_SERVICE);
 
-        sender = new MailSender("342972949@qq.com", "phoenix_zh@foxmail.com", "Subject", "Text Body", "<b>Html Body<b>");
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.preference_fragment_layout, container, false);
+        sender = new MailSender(mContext, "342972949@qq.com", "phoenix_zh@foxmail.com", "Subject", "Text Body", "<b>Html Body<b>");
 
         Preference testBtn = (Preference) findPreference("connection_test");
         testBtn.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -82,7 +79,8 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
 
         mSendAccount = SEND_ACCOUNT;
         mPsw = PASSWORD;
-        mReceiverAccount = preferences.getString(RECEIVER_ACCOUNT, "");
+        mReceiverAccount = mPreferences.getString(RECEIVER_ACCOUNT, "");
+        mKeepPicture = mPreferences.getBoolean(KEEP_PICTURE, false);
 
         mReceiverPre = (Preference) findPreference(RECEIVER_ACCOUNT);
         if (!"".equals(mReceiverAccount) && !"receiving account".equals(mReceiverAccount)) {
@@ -92,6 +90,13 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
         mMonitorEnabled = (Preference) findPreference(ENABLE_ADMIN);
 
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.preference_fragment_layout, container, false);
+
         return view;
     }
 
@@ -120,25 +125,9 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
                 Log.d(TAG, "disable device monitor");
                 mPolicyManager.removeActiveAdmin(mAdminReceiver);
             }
-        }
-        /*
-        switch (key) {
-            case RECEIVER_ACCOUNT:
-                mReceiverAccount = sharedPreferences.getString(RECEIVER_ACCOUNT, "");
-                mReceiverPre.setSummary(mReceiverAccount);
-                break;
+        } else if(KEEP_PICTURE.equals(key)) {
 
-            case ENABLE_ADMIN:
-                if(sharedPreferences.getBoolean(ENABLE_ADMIN, false)) {
-                    activeAdminManager();
-                } else {
-                    Log.d(TAG, "disable device monitor");
-                    mPolicyManager.removeActiveAdmin(mAdminReceiver);
-                }
-            default:
-                break;
         }
-        */
     }
 
     private void activeAdminManager(){

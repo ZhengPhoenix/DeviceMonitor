@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme" parent="android:Theme.WithActionBar">
+    <style name="AppTheme.Customize" parent="android:Theme.Material.Light.DarkActionBar">
+        <item name="android:colorPrimary">@color/blue_main</item>
+        <item name="android:statusBarColor">@color/status_color</item>
     </style>
 </resources>

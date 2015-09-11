@@ -25,5 +25,6 @@
     <string name="more_option">More Option</string>
     <string name="ten_sec_limit">Malfunction Protection</string>
     <string name="ten_sec_limit_summary">DO NOT take picture with correct password input in 10s</string>
-
+    <string name="keep_picture">Keep Picture</string>
+    <string name="keep_picture_summary">Keep taken picture in device</string>
 </resources>

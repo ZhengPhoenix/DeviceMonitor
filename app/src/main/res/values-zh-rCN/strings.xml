@@ -24,4 +24,6 @@
     <string name="more_option">更多</string>
     <string name="ten_sec_limit">误操作保护</string>
     <string name="ten_sec_limit_summary">如果在10秒内输入正确的解锁图案或密码，则取消拍照</string>
+    <string name="keep_picture">保留照片</string>
+    <string name="keep_picture_summary">在手机里保留解锁失败时拍下的相片</string>
 </resources>

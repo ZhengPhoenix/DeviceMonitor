@@ -28,8 +28,15 @@
         <CheckBoxPreference
             android:title="@string/ten_sec_limit"
             android:summary="@string/ten_sec_limit_summary"
-            android:key="disablepic"
+            android:key="ten_sec_delay"
             android:defaultValue="false">
+        </CheckBoxPreference>
+
+        <CheckBoxPreference
+            android:title="@string/keep_picture"
+            android:summary="@string/keep_picture_summary"
+            android:defaultValue="false"
+            android:key="keep_picture">
         </CheckBoxPreference>
     </PreferenceCategory>
 

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme.Light" parent="android:Theme.WithActionBar">
-        <item name="android:textColorPrimary">@color/blue_main</item>
+    <style name="AppTheme.Customize" parent="android:Theme.Holo.Light">
     </style>
 </resources>

@@ -7,7 +7,9 @@ import android.content.SharedPreferences;
 import android.hardware.Camera;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -32,10 +34,17 @@ public class CaptureService extends Service {
 
     public static final String ACTION_SINGLE_PIC = "com.phoenix.devicemonitor.SINGLE_PIC";
     public static final String ACTION_MULTI_PIC = "com.phoenix.devicemonitor.MULTI_PIC";
+    public static final String BLOCK_SEND_DELAY = "com.phoenix.devicemonitor.BLOCK_SEND_DELAY";
 
+    SharedPreferences mPre;
+    private static String mReceiver;
     private static boolean mSaving = false;
+    private boolean mDelaying = false;
+    private Handler mHandler;
+    private MailSender mSender;
 
     public CaptureService() {
+
     }
 
     @Override
@@ -44,16 +53,24 @@ public class CaptureService extends Service {
         if(mContext == null) {
             mContext = getApplicationContext();
         }
+        if(mHandler == null) {
+            mHandler = new Handler(Looper.getMainLooper());
+        }
+        mPre = PreferenceManager.getDefaultSharedPreferences(mContext);
+        mReceiver  = mPre.getString(PreferenceFragment.RECEIVER_ACCOUNT, "");
 
         if(mCamera == null) {
             Log.d(TAG, "getCameraInstance");
             mCamera = getCameraInstance();
         }
-
         if(mNinjiaCamera == null) {
             Log.d(TAG, "init NinjiaCamera");
             mNinjiaCamera = new NinjiaCamera(this, mCamera);
             setCameraDiaplayOrientation(mContext, cameraId, mCamera);
+        }
+
+        if(mPre.getBoolean(PreferenceFragment.TEN_SEC_DELAY, false)) {
+            mDelaying = true;
         }
 
         String action = intent.getAction();
@@ -66,21 +83,10 @@ public class CaptureService extends Service {
             }
         } else if(ACTION_MULTI_PIC.equals(action)) {
 
+        } else if(BLOCK_SEND_DELAY.equals(action)) {
+            mDelaying = false;
         }
-        /*
-        switch(action) {
-            case ACTION_SINGLE_PIC:
-                if(!mSaving) {
-                    mSaving = true;
-                    mCamera.takePicture(null, null, mPictureCallback);
-                    Log.d(TAG, "take pic");
-                }
-                break;
-            case ACTION_MULTI_PIC:
-            default :
-                break;
-        }
-        */
+
         return START_REDELIVER_INTENT;
     }
 
@@ -126,15 +132,26 @@ public class CaptureService extends Service {
                 Log.e(TAG, "write picture failed : " + e.getMessage());
             }
             mSaving = false;
-            //Toast.makeText(mContext, "Take Pic Succeeded", Toast.LENGTH_SHORT).show();
             mCamera.release();
             mCamera = null;
             mNinjiaCamera = null;
 
-            SharedPreferences pre = PreferenceManager.getDefaultSharedPreferences(mContext);
-            String receiver = pre.getString(PreferenceFragment.RECEIVER_ACCOUNT, "");
-            MailSender sender = new MailSender("342972949@qq.com", receiver, "Subject", "Text Body", "<b>Html Body<b>", outputFile.toString());
-            sender.execute();
+
+            mSender = new MailSender(mContext, mReceiver, "Subject", "Text Body", "<b>Html Body<b>", outputFile.toString());
+
+            if(!mDelaying) {
+                mSender.execute();
+            } else {
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(mDelaying) {
+                            Log.d(TAG, "delay send email in 4s");
+                            mSender.execute();
+                        }
+                    }
+                },10000);
+            }
 
             Log.d(TAG, "Take Pic Succeeded");
         }
@@ -176,4 +193,5 @@ public class CaptureService extends Service {
 
         mCamera.setParameters(param);
     }
+
 }

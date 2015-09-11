@@ -4,8 +4,12 @@ import android.app.admin.DeviceAdminReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.phoenix.devicemonitor.PreferenceFragment;
 import com.phoenix.devicemonitor.service.CaptureService;
 
 
@@ -48,6 +52,14 @@ public class PatternLockMonitorReceiver extends DeviceAdminReceiver{
     @Override
     public void onPasswordSucceeded(Context context, Intent intent) {
         super.onPasswordSucceeded(context, intent);
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        if(preferences.getBoolean(PreferenceFragment.TEN_SEC_DELAY, false)) {
+            Intent i = new Intent();
+            i.setComponent(new ComponentName("com.phoenix.devicemonitor", "com.phoenix.devicemonitor.service.CaptureService"));
+            i.setAction(CaptureService.BLOCK_SEND_DELAY);
+            context.startService(i);
+        }
 
         Log.d(TAG, "PasswordSucceeded");
     }

@@ -1,9 +1,21 @@
 package com.phoenix.devicemonitor.service;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.util.Log;
+
+import com.phoenix.camera.CameraSave;
+import com.phoenix.devicemonitor.PreferenceFragment;
+
+import org.apache.commons.io.FileUtils;
 
 import javax.activation.CommandMap;
 import javax.activation.DataHandler;
@@ -20,6 +32,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
@@ -45,11 +58,11 @@ public class MailSender extends AsyncTask{
 
     private static final String TAG = "MailSender";
 
+    private Context mContext;
+
     private static final String SMTP_SERVER = "smtp.qq.com";
     private static final String USER_NAME = "342972949@qq.com";
     private static final String USER_PSW = "heaventear";
-
-    private static final String TEMP_PIC_DIR = "/storage/emulated/0/Pictures/CameraSave/IMG_150910_100611.jpg";
 
     private String mFrom;
     private String mToList;
@@ -61,8 +74,9 @@ public class MailSender extends AsyncTask{
 
     private boolean authenticationRequired = false;
 
-    public MailSender(String from, String to, String subject, String txtBody, String htmlBody) {
-        this.mFrom = from;
+    public MailSender(Context context, String to, String subject, String txtBody, String htmlBody) {
+        this.mContext = context;
+        this.mFrom = USER_NAME;
         this.mToList = to;
         this.mCcList = null;
         this.mSubject = subject;
@@ -72,8 +86,9 @@ public class MailSender extends AsyncTask{
         this.authenticationRequired = true;
     }
 
-    public MailSender(String from, String to, String subject, String txtBody, String htmlBody, String path) {
-        this.mFrom = from;
+    public MailSender(Context context, String to, String subject, String txtBody, String htmlBody, String path) {
+        this.mContext = context;
+        this.mFrom = USER_NAME;
         this.mToList = to;
         this.mCcList = null;
         this.mSubject = subject;
@@ -101,6 +116,31 @@ public class MailSender extends AsyncTask{
 
     @Override
     protected void onPostExecute(Object o) {
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        if(!preferences.getBoolean(PreferenceFragment.KEEP_PICTURE, false)) {
+
+            File file = new File(this.mAttachment);
+            String rootDir = file.getParent();
+            try {
+                FileUtils.deleteDirectory(new File(rootDir));
+            } catch (IOException e) {
+                Log.d(TAG, "delete directory failed");
+            }
+
+            MediaScannerConnection.scanFile(mContext, new String[]{(new File(rootDir)).getParent() + File.separator}, null,
+                    new MediaScannerConnection.OnScanCompletedListener() {
+                        @Override
+                        public void onScanCompleted(String path, Uri uri) {
+                            Log.d(TAG, "Scanned completed with uri : " + uri.toString());
+                            Log.d(TAG, "Scanned completed with path : " + path);
+                            mContext.getContentResolver().delete(uri, null, null);
+                        }
+                    });
+
+            Log.d(TAG, "CameraSave directory has been removed, dir:" + file.getParent());
+
+        }
         super.onPostExecute(o);
     }
 
@@ -193,11 +233,15 @@ public class MailSender extends AsyncTask{
 
         msg.setContent(mp);
 
+        //temporary block for debug
+        /*
         try {
             Transport.send(msg);
         } catch (Exception e) {
             Log.d(TAG, "send email failed , e :" + e.getMessage());
         }
+        */
+        Log.d(TAG, "send mail task executed");
     }
 
     private static class SMTPAuthenticator extends Authenticator {
@@ -213,7 +257,6 @@ public class MailSender extends AsyncTask{
 
     private byte[] createByteArrayForImage(String path) {
 
-//            InputStream inStream = new FileInputStream(path);
         Bitmap bitmap = BitmapFactory.decodeFile(path);
 
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();

@@ -14,12 +14,10 @@ import java.util.Date;
 public class CameraSave {
 
     private Context mContext;
-    private static final String TAG = "CameraSave";
+    public static final String TAG = "CameraSave";
 
     public static final int DIRECTORY_PUBLIC = 1;
     public static final int DIRECTORY_PRIVATE = 2;
-
-    private static final String tempDir = "data/media/0/Pictures/";
 
     public CameraSave(Context context) {
         mContext = context;
@@ -47,14 +45,6 @@ public class CameraSave {
             }
         }
 
-        //use temporary dir
-        /*
-        mediaStorageDir = new File(tempDir);
-        if(!mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs())
-                Log.e(TAG, "create temp dir failed");
-        }
-        */
 
         String timeStamp = new SimpleDateFormat("yyMMdd_HHmmss").format(new Date());
 
