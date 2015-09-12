@@ -61,8 +61,8 @@ public class MailSender extends AsyncTask{
     private Context mContext;
 
     private static final String SMTP_SERVER = "smtp.qq.com";
-    private static final String USER_NAME = "342972949@qq.com";
-    private static final String USER_PSW = "heaventear";
+    private static final String USER_NAME = "";
+    private static final String USER_PSW = "";
 
     private String mFrom;
     private String mToList;
@@ -234,13 +234,13 @@ public class MailSender extends AsyncTask{
         msg.setContent(mp);
 
         //temporary block for debug
-        /*
+
         try {
             Transport.send(msg);
         } catch (Exception e) {
             Log.d(TAG, "send email failed , e :" + e.getMessage());
         }
-        */
+
         Log.d(TAG, "send mail task executed");
     }
 
