@@ -21,6 +21,7 @@ public class PatternLockMonitorReceiver extends DeviceAdminReceiver{
     private final String TAG = "MonitorReceiver";
 
     private static final String BOOT_COMPLETED = "android.intent.action.BOOT_COMPLETED";
+    private static final String CONN_CHANGE = "android.net.conn.CONNECTIVITY_CHANGE";
 
 
     @Override
@@ -46,6 +47,13 @@ public class PatternLockMonitorReceiver extends DeviceAdminReceiver{
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         Log.d(TAG, "receive with action :" + action);
+
+        if(CONN_CHANGE.equals(action)) {
+            Intent i = new Intent();
+            i.setComponent(new ComponentName("com.phoenix.devicemonitor", "com.phoenix.devicemonitor.service.CaptureService"));
+            i.setAction(CaptureService.RESEND_CONNECTED);
+            context.startService(i);
+        }
         super.onReceive(context, intent);
     }
 

@@ -32,15 +32,15 @@
             android:defaultValue="false">
         </CheckBoxPreference>
 
-        <CheckBoxPreference
+        <!--CheckBoxPreference
             android:title="@string/keep_picture"
             android:summary="@string/keep_picture_summary"
             android:defaultValue="false"
             android:key="keep_picture">
-        </CheckBoxPreference>
+        </CheckBoxPreference-->
     </PreferenceCategory>
 
-    <Preference
+    <!--Preference
         android:title="Connection Test"
-        android:key="connection_test"/>
+        android:key="connection_test"/-->
 </PreferenceScreen>

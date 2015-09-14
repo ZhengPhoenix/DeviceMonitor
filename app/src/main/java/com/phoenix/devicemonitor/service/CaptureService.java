@@ -6,7 +6,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.Camera;
 import android.media.MediaScannerConnection;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -35,13 +38,16 @@ public class CaptureService extends Service {
     public static final String ACTION_SINGLE_PIC = "com.phoenix.devicemonitor.SINGLE_PIC";
     public static final String ACTION_MULTI_PIC = "com.phoenix.devicemonitor.MULTI_PIC";
     public static final String BLOCK_SEND_DELAY = "com.phoenix.devicemonitor.BLOCK_SEND_DELAY";
+    public static final String RESEND_CONNECTED = "com.phoenix.devicemonitor.RESEND_CONNECTED";
 
     SharedPreferences mPre;
     private static String mReceiver;
     private static boolean mSaving = false;
     private boolean mDelaying = false;
+    private boolean mIsConnected = false;
     private Handler mHandler;
     private MailSender mSender;
+    private ConnectivityManager mCm;
 
     public CaptureService() {
 
@@ -53,6 +59,13 @@ public class CaptureService extends Service {
         if(mContext == null) {
             mContext = getApplicationContext();
         }
+
+        if(mCm == null) {
+            mCm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        }
+
+        mIsConnected = getConnectState();
+
         if(mHandler == null) {
             mHandler = new Handler(Looper.getMainLooper());
         }
@@ -85,6 +98,17 @@ public class CaptureService extends Service {
 
         } else if(BLOCK_SEND_DELAY.equals(action)) {
             mDelaying = false;
+        } else if (RESEND_CONNECTED.equals(action)) {
+            if (mIsConnected) {
+                File rootDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), CameraSave.TAG);
+                if(rootDir.exists()){
+                    File[] files = rootDir.listFiles();
+                    Log.d(TAG, "file : " + files[0].getPath());
+
+                    mSender = new MailSender(mContext, mReceiver, "Subject", "Text Body", "<b>Html Body<b>", files[0].getPath());
+                    mSender.execute();
+                }
+            }
         }
 
         return START_REDELIVER_INTENT;
@@ -118,6 +142,7 @@ public class CaptureService extends Service {
                 fops.write(data);
                 fops.close();
 
+                /*
                 MediaScannerConnection.scanFile(mContext, new String[]{outputFile.toString()}, null,
                         new MediaScannerConnection.OnScanCompletedListener() {
                             @Override
@@ -126,6 +151,7 @@ public class CaptureService extends Service {
 
                             }
                         });
+                 */
             } catch (FileNotFoundException e) {
                 Log.e(TAG, "generate picture failed : " + e.getMessage());
             } catch (IOException e) {
@@ -136,24 +162,23 @@ public class CaptureService extends Service {
             mCamera = null;
             mNinjiaCamera = null;
 
+            if(mIsConnected) {
+                mSender = new MailSender(mContext, mReceiver, "Subject", "Text Body", "<b>Html Body<b>", outputFile.toString());
 
-            mSender = new MailSender(mContext, mReceiver, "Subject", "Text Body", "<b>Html Body<b>", outputFile.toString());
-
-            if(!mDelaying) {
-                mSender.execute();
-            } else {
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(mDelaying) {
-                            Log.d(TAG, "delay send email in 4s");
-                            mSender.execute();
+                if (!mDelaying ) {
+                    mSender.execute();
+                } else  {
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mDelaying) {
+                                Log.d(TAG, "delay send email in 4s");
+                                mSender.execute();
+                            }
                         }
-                    }
-                },10000);
+                    }, 10000);
+                }
             }
-
-            Log.d(TAG, "Take Pic Succeeded");
         }
     };
 
@@ -194,4 +219,11 @@ public class CaptureService extends Service {
         mCamera.setParameters(param);
     }
 
+    private boolean getConnectState(){
+        if(mCm != null) {
+            NetworkInfo networkInfo = mCm.getActiveNetworkInfo();
+            return (networkInfo != null && networkInfo.isConnectedOrConnecting());
+        } else
+            return false;
+    }
 }

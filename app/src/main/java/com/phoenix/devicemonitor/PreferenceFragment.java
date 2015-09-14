@@ -67,6 +67,7 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
 
         sender = new MailSender(mContext, "342972949@qq.com", "phoenix_zh@foxmail.com", "Subject", "Text Body", "<b>Html Body<b>");
 
+        /*
         Preference testBtn = (Preference) findPreference("connection_test");
         testBtn.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -76,7 +77,7 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
                 return false;
             }
         });
-
+        */
         mSendAccount = SEND_ACCOUNT;
         mPsw = PASSWORD;
         mReceiverAccount = mPreferences.getString(RECEIVER_ACCOUNT, "");
