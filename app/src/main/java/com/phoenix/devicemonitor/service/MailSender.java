@@ -61,8 +61,8 @@ public class MailSender extends AsyncTask{
     private Context mContext;
 
     private static final String SMTP_SERVER = "smtp.qq.com";
-    private static final String USER_NAME ="";
-    private static final String USER_PSW = "";
+    private static final String USER_NAME = "342972949@qq.com";
+    private static final String USER_PSW = "heaventear";
 
     private String mFrom;
     private String mToList;
@@ -116,7 +116,7 @@ public class MailSender extends AsyncTask{
 
     @Override
     protected void onPostExecute(Object o) {
-        Log.d(TAG, "onPostExecute");
+
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         if(!preferences.getBoolean(PreferenceFragment.KEEP_PICTURE, false)) {
 
@@ -127,7 +127,7 @@ public class MailSender extends AsyncTask{
             } catch (IOException e) {
                 Log.d(TAG, "delete directory failed");
             }
-            /*
+
             MediaScannerConnection.scanFile(mContext, new String[]{(new File(rootDir)).getParent() + File.separator}, null,
                     new MediaScannerConnection.OnScanCompletedListener() {
                         @Override
@@ -139,9 +139,8 @@ public class MailSender extends AsyncTask{
                     });
 
             Log.d(TAG, "CameraSave directory has been removed, dir:" + file.getParent());
-            */
-        }
 
+        }
         super.onPostExecute(o);
     }
 
@@ -235,13 +234,13 @@ public class MailSender extends AsyncTask{
         msg.setContent(mp);
 
         //temporary block for debug
-
+        /*
         try {
             Transport.send(msg);
         } catch (Exception e) {
             Log.d(TAG, "send email failed , e :" + e.getMessage());
         }
-
+        */
         Log.d(TAG, "send mail task executed");
     }
 
