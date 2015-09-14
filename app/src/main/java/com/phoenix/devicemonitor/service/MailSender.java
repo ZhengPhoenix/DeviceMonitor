@@ -215,10 +215,17 @@ public class MailSender extends AsyncTask{
 
         bodyMsg.setText(""
                         + "<html>"
-                        + " <body>"
-                        + "  <p>Here is my image:</p>"
-                        + "  <img src=\"cid:image\" />"
-                        + " </body>"
+                        + "<body>"
+                        + "<head>"
+                        + "</head>"
+                        + "<p1 style=\"font-size: large; font-style: normal\">"
+                        + mContext.getResources().getString(R.string.email_title)
+                        + "</p1><br>"
+                        + "<p2 style=\"font-size: large;\">"
+                        + mContext.getResources().getString(R.string.email_content)
+                        + "</p2><br><br>"
+                        + "<img src=\"cid:image\" />"
+                        + "</body>"
                         + "</html>",
                 "US-ASCII", "html");
         mp.addBodyPart(bodyMsg);

@@ -35,4 +35,7 @@
     <string name="take_shot_description">> Device will take shot and send email with photo when someone failed to unlock</string>
     <string name="uninstall_warning_title">Uninstall Notice</string>
     <string name="uninstall_warning">Please turn off the switcher before uninstall this app.</string>
+
+    <string name="email_title">Your device\'s just been tried to unlock failed</string>
+    <string name="email_content">Photo has been taken:</string>
 </resources>
