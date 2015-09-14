@@ -1,6 +1,7 @@
 package com.phoenix.devicemonitor;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -65,9 +66,8 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
         mAdminReceiver = new ComponentName(mContext, PatternLockMonitorReceiver.class);
         mPolicyManager = (DevicePolicyManager) mContext.getSystemService(Context.DEVICE_POLICY_SERVICE);
 
-        sender = new MailSender(mContext, "342972949@qq.com", "phoenix_zh@foxmail.com", "Subject", "Text Body", "<b>Html Body<b>");
-
         /*
+        sender = new MailSender(mContext, "342972949@qq.com", "phoenix_zh@foxmail.com", "Subject", "Text Body", "<b>Html Body<b>");
         Preference testBtn = (Preference) findPreference("connection_test");
         testBtn.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -146,6 +146,9 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
         Log.d(TAG, "on result, result: " + resultCode);
         if(resultCode == Activity.RESULT_OK) {
             ((TwoStatePreference) mMonitorEnabled).setChecked(true);
+
+            WarningDialogFragment dialogFragment = new WarningDialogFragment();
+            dialogFragment.show(getFragmentManager(), null);
         } else if(resultCode == Activity.RESULT_CANCELED) {
             ((TwoStatePreference) mMonitorEnabled).setChecked(false);
         }

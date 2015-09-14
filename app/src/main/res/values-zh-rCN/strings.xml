@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">DeviceMonitor</string>
     <string name="hello_world">Hello world!</string>
+    <string name="button_ok">确定</string>
     <string name="action_settings">设置</string>
     <string name="pattern_descript">锁屏密码安全设置</string>
     <string name="admin_warning_descript">您的设备将会由设备管理器来保护</string>
@@ -26,4 +27,11 @@
     <string name="ten_sec_limit_summary">如果在10秒内输入正确的解锁图案或密码，则取消拍照</string>
     <string name="keep_picture">保留照片</string>
     <string name="keep_picture_summary">在手机里保留解锁失败时拍下的相片</string>
+
+    <string name="warning_dialog_title">注意</string>
+    <string name="autorun_warning_title">允许自动运行</string>
+    <string name="autorun_warning">> 如果您的手机有App自动运行限制功能，请打开该应用的自动运行，以防止重启后不能检测解锁操作</string>
+    <string name="take_shot_description">> 手机将会在解锁失败时自动拍照发送邮件到预设的邮箱</string>
+    <string name="uninstall_warning_title">卸载警告</string>
+    <string name="uninstall_warning">如果您需要卸载该App，请先关闭锁屏解锁保护</string>
 </resources>
