@@ -1,1 +1,1 @@
-include ':app', ':mail', ':activation', ':additionnal', ':commons-io-2.4'
+include ':mail', ':activation', ':additionnal', ':commons-io-2.4', ':app'
