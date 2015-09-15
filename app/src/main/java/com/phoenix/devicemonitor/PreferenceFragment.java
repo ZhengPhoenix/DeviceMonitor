@@ -66,18 +66,6 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
         mAdminReceiver = new ComponentName(mContext, PatternLockMonitorReceiver.class);
         mPolicyManager = (DevicePolicyManager) mContext.getSystemService(Context.DEVICE_POLICY_SERVICE);
 
-        /*
-        sender = new MailSender(mContext, "342972949@qq.com", "phoenix_zh@foxmail.com", "Subject", "Text Body", "<b>Html Body<b>");
-        Preference testBtn = (Preference) findPreference("connection_test");
-        testBtn.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Log.d(TAG, "connection test");
-                sender.execute();
-                return false;
-            }
-        });
-        */
         mSendAccount = SEND_ACCOUNT;
         mPsw = PASSWORD;
         mReceiverAccount = mPreferences.getString(RECEIVER_ACCOUNT, "");

@@ -19,6 +19,7 @@ import android.util.Log;
 import com.phoenix.camera.CameraSave;
 import com.phoenix.camera.NinjiaCamera;
 import com.phoenix.devicemonitor.PreferenceFragment;
+import com.phoenix.devicemonitor.R;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -42,6 +43,7 @@ public class CaptureService extends Service {
 
     SharedPreferences mPre;
     private static String mReceiver;
+    private String mSubject;
     private static boolean mSaving = false;
     private boolean mDelaying = false;
     private boolean mIsConnected = false;
@@ -59,6 +61,8 @@ public class CaptureService extends Service {
         if(mContext == null) {
             mContext = getApplicationContext();
         }
+
+        mSubject = mContext.getResources().getString(R.string.app_name);
 
         if(mCm == null) {
             mCm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -99,15 +103,17 @@ public class CaptureService extends Service {
         } else if(BLOCK_SEND_DELAY.equals(action)) {
             mDelaying = false;
         } else if (RESEND_CONNECTED.equals(action)) {
+            Log.d(TAG, "resend, data connected: " +mIsConnected );
             if (mIsConnected) {
                 File rootDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), CameraSave.TAG);
                 if(rootDir.exists()){
                     File[] files = rootDir.listFiles();
                     Log.d(TAG, "file : " + files[0].getPath());
 
-                    mSender = new MailSender(mContext, mReceiver, "Subject", "Text Body", "<b>Html Body<b>", files[0].getPath());
+                    mSender = new MailSender(mContext, mReceiver, mSubject, files[0].getPath());
                     mSender.execute();
-                }
+                } else
+                    mContext.stopService(new Intent(mContext, CaptureService.class));
             }
         }
 
@@ -128,7 +134,7 @@ public class CaptureService extends Service {
     Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-            Log.d(TAG, "pic taken");
+            Log.d(TAG, "pic taken, data connected: " +mIsConnected );
 
             File outputFile = mSave.getOutputMediaFile(CameraSave.DIRECTORY_PUBLIC);
 
@@ -141,17 +147,6 @@ public class CaptureService extends Service {
                 FileOutputStream fops = new FileOutputStream(outputFile);
                 fops.write(data);
                 fops.close();
-
-                /*
-                MediaScannerConnection.scanFile(mContext, new String[]{outputFile.toString()}, null,
-                        new MediaScannerConnection.OnScanCompletedListener() {
-                            @Override
-                            public void onScanCompleted(String path, Uri uri) {
-                                Log.d(TAG, "Scanned completed with path : " + path);
-
-                            }
-                        });
-                 */
             } catch (FileNotFoundException e) {
                 Log.e(TAG, "generate picture failed : " + e.getMessage());
             } catch (IOException e) {
@@ -163,7 +158,7 @@ public class CaptureService extends Service {
             mNinjiaCamera = null;
 
             if(mIsConnected) {
-                mSender = new MailSender(mContext, mReceiver, "Subject", "Text Body", "<b>Html Body<b>", outputFile.toString());
+                mSender = new MailSender(mContext, mReceiver, mSubject, outputFile.toString());
 
                 if (!mDelaying ) {
                     mSender.execute();
@@ -172,7 +167,7 @@ public class CaptureService extends Service {
                         @Override
                         public void run() {
                             if (mDelaying) {
-                                Log.d(TAG, "delay send email in 4s");
+                                Log.d(TAG, "delay send email in 10s");
                                 mSender.execute();
                             }
                         }

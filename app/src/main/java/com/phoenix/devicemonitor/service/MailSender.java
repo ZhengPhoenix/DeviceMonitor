@@ -69,32 +69,26 @@ public class MailSender extends AsyncTask{
     private String mToList;
     private String mCcList;
     private String mSubject;
-    private String mTxtBody;
-    private String mHtmlBody;
     private String mAttachment;
 
     private boolean authenticationRequired = false;
 
-    public MailSender(Context context, String to, String subject, String txtBody, String htmlBody) {
+    public MailSender(Context context, String to, String subject) {
         this.mContext = context;
         this.mFrom = USER_NAME;
         this.mToList = to;
         this.mCcList = null;
         this.mSubject = subject;
-        this.mTxtBody = txtBody;
-        this.mHtmlBody = htmlBody;
 
         this.authenticationRequired = true;
     }
 
-    public MailSender(Context context, String to, String subject, String txtBody, String htmlBody, String path) {
+    public MailSender(Context context, String to, String subject, String path) {
         this.mContext = context;
         this.mFrom = USER_NAME;
         this.mToList = to;
         this.mCcList = null;
         this.mSubject = subject;
-        this.mTxtBody = txtBody;
-        this.mHtmlBody = htmlBody;
         this.mAttachment = path;
 
         this.authenticationRequired = true;
@@ -140,7 +134,7 @@ public class MailSender extends AsyncTask{
     }
 
     public void send() throws AddressException, MessagingException {
-
+        Log.d(TAG, "send task started");
         MailcapCommandMap mc = (MailcapCommandMap) CommandMap.getDefaultCommandMap();
         mc.addMailcap("text/html;; x-java-content-handler=com.sun.mail.handlers.text_html");
         mc.addMailcap("text/xml;; x-java-content-handler=com.sun.mail.handlers.text_xml");
@@ -216,7 +210,7 @@ public class MailSender extends AsyncTask{
                         + "<img src=\"cid:image\" />"
                         + "</body>"
                         + "</html>",
-                "US-ASCII", "html");
+                "UTF-8", "html");
         mp.addBodyPart(bodyMsg);
 
         bodyMsg = new MimeBodyPart();
@@ -226,11 +220,7 @@ public class MailSender extends AsyncTask{
 
         mp.addBodyPart(bodyMsg);
 
-
-
         msg.setContent(mp);
-
-        //temporary block for debug
 
         try {
             Transport.send(msg);
@@ -294,22 +284,6 @@ public class MailSender extends AsyncTask{
 
     public void setmSubject(String mSubject) {
         this.mSubject = mSubject;
-    }
-
-    public String getmTxtBody() {
-        return mTxtBody;
-    }
-
-    public void setmTxtBody(String mTxtBody) {
-        this.mTxtBody = mTxtBody;
-    }
-
-    public String getmHtmlBody() {
-        return mHtmlBody;
-    }
-
-    public void setmHtmlBody(String mHtmlBody) {
-        this.mHtmlBody = mHtmlBody;
     }
 
     public boolean isAuthenticationRequired() {
