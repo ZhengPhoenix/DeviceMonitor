@@ -95,7 +95,13 @@ public class CaptureService extends Service {
         if(ACTION_SINGLE_PIC.equals(action)) {
             if(!mSaving) {
                 mSaving = true;
-                mCamera.takePicture(null, null, mPictureCallback);
+                try {
+                    mCamera.takePicture(null, null, mPictureCallback);
+                } catch (Exception e) {
+                    Log.d(TAG, "call takePicture failed, e:" + e.getMessage());
+                    mCamera.release();
+                    mCamera = null;
+                }
                 Log.d(TAG, "take pic");
             }
         } else if(ACTION_MULTI_PIC.equals(action)) {
@@ -122,6 +128,10 @@ public class CaptureService extends Service {
 
     @Override
     public void onDestroy() {
+        if(mCamera != null) {
+            mCamera.release();
+            mCamera = null;
+        }
         super.onDestroy();
     }
 
