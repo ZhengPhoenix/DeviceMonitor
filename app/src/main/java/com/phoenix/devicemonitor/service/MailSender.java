@@ -14,6 +14,7 @@ import android.util.Log;
 
 import com.phoenix.camera.CameraSave;
 import com.phoenix.devicemonitor.PreferenceFragment;
+import com.phoenix.devicemonitor.R;
 
 import org.apache.commons.io.FileUtils;
 
@@ -127,19 +128,7 @@ public class MailSender extends AsyncTask{
             } catch (IOException e) {
                 Log.d(TAG, "delete directory failed");
             }
-            /*
-            MediaScannerConnection.scanFile(mContext, new String[]{(new File(rootDir)).getParent() + File.separator}, null,
-                    new MediaScannerConnection.OnScanCompletedListener() {
-                        @Override
-                        public void onScanCompleted(String path, Uri uri) {
-                            Log.d(TAG, "Scanned completed with uri : " + uri.toString());
-                            Log.d(TAG, "Scanned completed with path : " + path);
-                            mContext.getContentResolver().delete(uri, null, null);
-                        }
-                    });
 
-            Log.d(TAG, "CameraSave directory has been removed, dir:" + file.getParent());
-            */
         }
 
         super.onPostExecute(o);
@@ -268,8 +257,8 @@ public class MailSender extends AsyncTask{
         Bitmap bitmap = BitmapFactory.decodeFile(path);
 
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-        int scaleW = (int) (bitmap.getWidth()*0.2);
-        int scaleH = (int) (bitmap.getHeight()*0.2);
+        int scaleW = (int) (bitmap.getWidth()*0.13);
+        int scaleH = (int) (bitmap.getHeight()*0.13);
         ((Bitmap) Bitmap.createScaledBitmap(bitmap, scaleW, scaleH, false)).compress(Bitmap.CompressFormat.JPEG, 40, outStream);
 
         return outStream.toByteArray();
