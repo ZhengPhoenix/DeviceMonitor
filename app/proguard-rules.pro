@@ -33,6 +33,6 @@
 -dontwarn javax.security.**
 -keep class javax.security.**{*;}
 
--keep public class com.sun.mail.smtp.**{public *;}
+-keep class com.sun.mail.**{*;}
 
 -keep class com.phoenix.devicemonitor.service.MailSender{*;}
