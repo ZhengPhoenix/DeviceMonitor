@@ -25,6 +25,7 @@ import javax.activation.MailcapCommandMap;
 import javax.activation.MimeType;
 import javax.activation.MimetypesFileTypeMap;
 import javax.mail.Authenticator;
+import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
@@ -186,16 +187,14 @@ public class MailSender extends AsyncTask{
 
         //ignore CC,BCC,ReplyTo
 
-        msg.setHeader("X-Mailer", "Mail Sender");
-        msg.setHeader("Precedence", "bulk");
         //set subject and content type
         msg.setSubject(mSubject);
 
         Multipart mp = new MimeMultipart("related");
-
-        //set body message
         MimeBodyPart bodyMsg = new MimeBodyPart();
 
+        //set body message
+        /*
         bodyMsg.setText(""
                         + "<html>"
                         + "<body>"
@@ -211,16 +210,49 @@ public class MailSender extends AsyncTask{
                         + "</body>"
                         + "</html>",
                 "UTF-8", "html");
+                */
+        /*
+        String html = new String(""
+                + "<html>"
+                + "<body>"
+                + "<head>"
+                + "</head>"
+                + "<p1 style=\"font-size: large; font-style: normal\">"
+                + mContext.getResources().getString(R.string.email_title)
+                + "</p1><br>"
+                + "<p2 style=\"font-size: large;\">"
+                + mContext.getResources().getString(R.string.email_content)
+                + "</p2><br><br>"
+                + "<img src=\"cid:image\" />"
+                + "</body>"
+                + "</html>");
+        bodyMsg.setContent(html, "text/html; charset=UTF-8");
         mp.addBodyPart(bodyMsg);
-
+        */
+        String html = new String(""
+                + "<html>"
+                + "<body>"
+                + "<head>"
+                + "</head>"
+                + "<p1 style=\"font-size: large; font-style: normal\">"
+                + mContext.getResources().getString(R.string.email_title)
+                + "</p1><br>"
+                + "<p2 style=\"font-size: large;\">"
+                + mContext.getResources().getString(R.string.email_content)
+                + "</p2><br><br>"
+                + "<img src=\"cid:image\" />"
+                + "</body>"
+                + "</html>");
+        msg.setContent(html, "text/html");
+/*
         bodyMsg = new MimeBodyPart();
         ByteArrayDataSource bds = new ByteArrayDataSource(createByteArrayForImage(this.mAttachment), "image/jpeg");
         bodyMsg.setDataHandler(new DataHandler(bds));
         bodyMsg.setHeader("Content-ID", "<image>");
 
         mp.addBodyPart(bodyMsg);
-
-        msg.setContent(mp);
+*/
+//        msg.setContent(mp);
         msg.saveChanges();
 
         try {

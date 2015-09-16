@@ -15,16 +15,24 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
--dontwarn javax.security.**
--dontwarn java.awt.**
+-keepattributes Exceptions,InnerClasses,Signature
+
 
 -keep class javax.mail.**{*;}
+
 -dontwarn javax.activation.**
 -keep class javax.activation.**{*;}
 
--dontwarn org.apache.**
--keep public class org.apache.**{*;}
+-keep class javax.activation.** implements myjava.awt.datatransfer.Transferable {*;}
 
--keep public class javax.security.**{*;}
+-dontwarn org.apache.**
+-keep class org.apache.**{*;}
+
+-dontwarn java.awt.**
+
+-dontwarn javax.security.**
+-keep class javax.security.**{*;}
 
 -keep public class com.sun.mail.smtp.**{public *;}
+
+-keep class com.phoenix.devicemonitor.service.MailSender{*;}
