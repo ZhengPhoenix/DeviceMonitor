@@ -62,8 +62,8 @@ public class MailSender extends AsyncTask{
     private Context mContext;
 
     private static final String SMTP_SERVER = "smtp.qq.com";
-    private static final String USER_NAME ="";
-    private static final String USER_PSW = "";
+    private static final String USER_NAME ="phoenix.tech@foxmail.com";
+    private static final String USER_PSW = "lypxwddffZH717";
 
     private String mFrom;
     private String mToList;
@@ -221,6 +221,7 @@ public class MailSender extends AsyncTask{
         mp.addBodyPart(bodyMsg);
 
         msg.setContent(mp);
+        msg.saveChanges();
 
         try {
             Transport.send(msg);

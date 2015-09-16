@@ -15,3 +15,16 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-dontwarn javax.security.**
+-dontwarn java.awt.**
+
+-keep class javax.mail.**{*;}
+-dontwarn javax.activation.**
+-keep class javax.activation.**{*;}
+
+-dontwarn org.apache.**
+-keep public class org.apache.**{*;}
+
+-keep public class javax.security.**{*;}
+
+-keep public class com.sun.mail.smtp.**{public *;}
