@@ -64,8 +64,8 @@ public class MailSender extends AsyncTask{
     private Context mContext;
 
     private static final String SMTP_SERVER = "smtp.qq.com";
-    private static final String USER_NAME ="phoenix.tech@foxmail.com";
-    private static final String USER_PSW = "lypxwddffZH717";
+    private static final String USER_NAME ="";
+    private static final String USER_PSW = "";
 
     private String mFrom;
     private String mToList;
