@@ -34,5 +34,3 @@
 -keep class javax.security.**{*;}
 
 -keep class com.sun.mail.**{*;}
-
--keep class com.phoenix.devicemonitor.service.MailSender{*;}
