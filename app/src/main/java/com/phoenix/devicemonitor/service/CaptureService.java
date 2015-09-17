@@ -128,6 +128,7 @@ public class CaptureService extends Service {
 
     @Override
     public void onDestroy() {
+        Log.d(TAG, "service destroy");
         if(mCamera != null) {
             mCamera.release();
             mCamera = null;
@@ -183,6 +184,8 @@ public class CaptureService extends Service {
                         }
                     }, 10000);
                 }
+            } else {
+                mContext.stopService(new Intent(mContext, CaptureService.class));
             }
         }
     };

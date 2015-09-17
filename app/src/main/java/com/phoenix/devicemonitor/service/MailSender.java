@@ -131,6 +131,8 @@ public class MailSender extends AsyncTask{
 
         }
 
+        mContext.stopService(new Intent(mContext, CaptureService.class));
+
         super.onPostExecute(o);
     }
 
