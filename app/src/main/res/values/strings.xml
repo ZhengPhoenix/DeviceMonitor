@@ -36,6 +36,6 @@
     <string name="uninstall_warning_title">Uninstall Notice</string>
     <string name="uninstall_warning">Please turn off the switcher before uninstall this app.</string>
 
-    <string name="email_title">Your device\'s just been tried to unlock failed</string>
+    <string name="email_title">Your device\'s %s just been tried to unlock failed</string>
     <string name="email_content">Photo has been taken:</string>
 </resources>

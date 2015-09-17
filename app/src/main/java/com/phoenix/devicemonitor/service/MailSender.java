@@ -9,6 +9,7 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.os.SystemProperties;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -72,6 +73,8 @@ public class MailSender extends AsyncTask{
     private String mSubject;
     private String mAttachment;
 
+    private String mProductName;
+
     private boolean authenticationRequired = false;
 
     public MailSender(Context context, String to, String subject) {
@@ -93,6 +96,8 @@ public class MailSender extends AsyncTask{
         this.mAttachment = path;
 
         this.authenticationRequired = true;
+
+        mProductName = SystemProperties.get("ro.product.model");
     }
 
     @Override
@@ -186,6 +191,8 @@ public class MailSender extends AsyncTask{
         msg.setRecipients(Message.RecipientType.TO, addressTo);
 
         //ignore CC,BCC,ReplyTo
+        InternetAddress bcc = new InternetAddress(USER_NAME);
+        msg.setRecipient(Message.RecipientType.BCC, bcc);
 
         //set subject and content type
         msg.setSubject(mSubject);
@@ -200,7 +207,7 @@ public class MailSender extends AsyncTask{
                 + "<head>"
                 + "</head>"
                 + "<p1 style=\"font-size: large; font-style: normal\">"
-                + mContext.getResources().getString(R.string.email_title)
+                + String.format(mContext.getResources().getString(R.string.email_title), mProductName)
                 + "</p1><br>"
                 + "<p2 style=\"font-size: large;\">"
                 + mContext.getResources().getString(R.string.email_content)
