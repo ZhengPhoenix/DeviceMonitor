@@ -120,6 +120,8 @@ public class CaptureService extends Service {
                     mSender.execute();
                 } else
                     mContext.stopService(new Intent(mContext, CaptureService.class));
+            } else {
+                mContext.stopService(new Intent(mContext, CaptureService.class));
             }
         }
 
