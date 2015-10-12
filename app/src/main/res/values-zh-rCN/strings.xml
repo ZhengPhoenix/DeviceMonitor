@@ -30,7 +30,7 @@
 
     <string name="warning_dialog_title">注意</string>
     <string name="autorun_warning_title">允许自动运行</string>
-    <string name="autorun_warning">> 如果您的手s有App自动运行限制功能，请打开该应用的自动运行，以防止重启后不能检测解锁操作</string>
+    <string name="autorun_warning">> 如果您的手机有App自动运行限制功能，请打开该应用的自动运行，以防止重启后不能检测解锁操作</string>
     <string name="take_shot_description">> 手机将会在解锁失败时自动拍照发送邮件到预设的邮箱</string>
     <string name="uninstall_warning_title">卸载警告</string>
     <string name="uninstall_warning">如果您需要卸载该App，请先关闭锁屏解锁保护</string>
