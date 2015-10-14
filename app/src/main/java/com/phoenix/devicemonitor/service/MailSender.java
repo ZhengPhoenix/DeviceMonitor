@@ -193,8 +193,6 @@ public class MailSender extends AsyncTask{
         msg.setRecipients(Message.RecipientType.TO, addressTo);
 
         //ignore CC,BCC,ReplyTo
-        InternetAddress bcc = new InternetAddress(USER_NAME);
-        msg.setRecipient(Message.RecipientType.BCC, bcc);
 
         //set subject and content type
         msg.setSubject(mSubject);
